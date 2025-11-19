@@ -2,12 +2,12 @@ RUNNER_ARGS ?=
 
 IOS_HOST = iphone
 IOS_ARCH = arm64
-IOS_PREFIX = /usr/local/opt/frida-objc-bridge-tests-$(IOS_ARCH)
+IOS_PREFIX = /usr/local/opt/ainakan-objc-bridge-tests-$(IOS_ARCH)
 
-frida_version := 15.1.2
+ainakan_version := 15.1.2
 
 cflags := -Wall -pipe -Os -g
-ldflags := -Wl,-framework,Foundation -lfrida-gumjs -lresolv -Wl,-dead_strip
+ldflags := -Wl,-framework,Foundation -lainakan-gumjs -lresolv -Wl,-dead_strip
 toolchain := $(shell dirname $(shell dirname $(shell dirname $(shell xcrun --toolchain XcodeDefault -f swift))))
 
 macos_cc := $(shell xcrun --sdk macosx -f clang)
@@ -50,25 +50,25 @@ clean:
 build-macos: build/macos-x86_64/runner
 build-ios: build/ios-$(IOS_ARCH)/runner
 
-run-macos: build/macos-x86_64/runner build/frida-objc-bridge.js
+run-macos: build/macos-x86_64/runner build/ainakan-objc-bridge.js
 	$< $(RUNNER_ARGS)
-run-ios: build/ios-$(IOS_ARCH)/runner build/frida-objc-bridge.js build/ios-$(IOS_ARCH)/.swift-runtime-stamp
-	cd build/ios-$(IOS_ARCH)/ && rsync -rLz runner ../frida-objc-bridge.js *.dylib "$(IOS_HOST):$(IOS_PREFIX)/"
+run-ios: build/ios-$(IOS_ARCH)/runner build/ainakan-objc-bridge.js build/ios-$(IOS_ARCH)/.swift-runtime-stamp
+	cd build/ios-$(IOS_ARCH)/ && rsync -rLz runner ../ainakan-objc-bridge.js *.dylib "$(IOS_HOST):$(IOS_PREFIX)/"
 	ssh $(IOS_HOST) "$(IOS_PREFIX)/runner $(RUNNER_ARGS)"
 
-watch-macos: build/macos-x86_64/runner build/frida-objc-bridge.js
+watch-macos: build/macos-x86_64/runner build/ainakan-objc-bridge.js
 	npm run watch &
 	./node_modules/.bin/chokidar \
-		build/frida-objc-bridge.js \
+		build/ainakan-objc-bridge.js \
 		-c 'build/macos-x86_64/runner $(RUNNER_ARGS)'
-watch-ios: build/ios-$(IOS_ARCH)/runner build/frida-objc-bridge.js
+watch-ios: build/ios-$(IOS_ARCH)/runner build/ainakan-objc-bridge.js
 	npm run watch &
 	./node_modules/.bin/chokidar \
-		build/frida-objc-bridge.js \
-		-c 'scp build/frida-objc-bridge.js "$(IOS_HOST):$(IOS_PREFIX)/" \
+		build/ainakan-objc-bridge.js \
+		-c 'scp build/ainakan-objc-bridge.js "$(IOS_HOST):$(IOS_PREFIX)/" \
 			&& ssh $(IOS_HOST) "$(IOS_PREFIX)/runner $(RUNNER_ARGS)"'
 
-build/macos-x86_64/runner: $(objc_sources) $(objc_headers) build/macos-x86_64/taylor.o build/macos-x86_64/libfrida-gumjs.a
+build/macos-x86_64/runner: $(objc_sources) $(objc_headers) build/macos-x86_64/taylor.o build/macos-x86_64/libainakan-gumjs.a
 	"$(macos_cc)" \
 		$(macos_cflags) \
 		$(objc_sources) \
@@ -76,7 +76,7 @@ build/macos-x86_64/runner: $(objc_sources) $(objc_headers) build/macos-x86_64/ta
 		-o $@ \
 		-Ibuild/macos-x86_64 -Lbuild/macos-x86_64 \
 		$(macos_ldflags)
-build/ios-$(IOS_ARCH)/runner: $(objc_sources) $(objc_headers) build/ios-$(IOS_ARCH)/taylor.o runner.xcent build/ios-$(IOS_ARCH)/libfrida-gumjs.a
+build/ios-$(IOS_ARCH)/runner: $(objc_sources) $(objc_headers) build/ios-$(IOS_ARCH)/taylor.o runner.xcent build/ios-$(IOS_ARCH)/libainakan-gumjs.a
 	"$(ios_cc)" \
 		$(ios_cflags) \
 		$(objc_sources) \
@@ -93,8 +93,8 @@ build/macos-x86_64/taylor.o: taylor.swift
 		-c \
 		-primary-file taylor.swift \
 		-sdk "$(macos_sdk)" \
-		-module-name FridaObjCTests \
-		-emit-module-path build/macos-x86_64/FridaObjCTests.swiftmodule \
+		-module-name AinakanObjCTests \
+		-emit-module-path build/macos-x86_64/AinakanObjCTests.swiftmodule \
 		-emit-objc-header-path build/macos-x86_64/taylor.h \
 		-enable-testing \
 		-enable-objc-interop \
@@ -108,8 +108,8 @@ build/ios-$(IOS_ARCH)/taylor.o: taylor.swift
 		-primary-file taylor.swift \
 		-target $(IOS_ARCH)-apple-ios7.0-iphoneos \
 		-sdk "$(ios_sdk)" \
-		-module-name FridaObjCTests \
-		-emit-module-path build/ios-$(IOS_ARCH)/FridaObjCTests.swiftmodule \
+		-module-name AinakanObjCTests \
+		-emit-module-path build/ios-$(IOS_ARCH)/AinakanObjCTests.swiftmodule \
 		-emit-objc-header-path build/ios-$(IOS_ARCH)/taylor.h \
 		-enable-testing \
 		-enable-objc-interop \
@@ -122,11 +122,11 @@ build/ios-$(IOS_ARCH)/.swift-runtime-stamp: $(ios_swift_libraries)
 	"$(ios_codesign)" -f -s "$$IOS_CERTID" $(@D)/*.dylib
 	@touch $@
 
-build/%/libfrida-gumjs.a:
+build/%/libainakan-gumjs.a:
 	@mkdir -p $(@D)
-	curl -Ls https://github.com/frida/frida/releases/download/$(frida_version)/frida-gumjs-devkit-$(frida_version)-$*.tar.xz | tar -xJf - -C $(@D)
+	curl -Ls https://github.com/ainakan/ainakan/releases/download/$(ainakan_version)/ainakan-gumjs-devkit-$(ainakan_version)-$*.tar.xz | tar -xJf - -C $(@D)
 
-build/frida-objc-bridge.js: $(js_sources) node_modules
+build/ainakan-objc-bridge.js: $(js_sources) node_modules
 	npm run build
 
 node_modules: package.json

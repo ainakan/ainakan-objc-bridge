@@ -62,7 +62,7 @@ TESTLIST_BEGIN (basics)
   TESTENTRY (performance)
 TESTLIST_END ()
 
-@protocol FridaCalculator
+@protocol AinakanCalculator
 - (int)add:(int)value;
 - (void)add:(int)value completion:(void (^)(int, NSError *))block;
 - (void)addSquared:(int)value completion:(void (^)(int, void *))block;
@@ -71,13 +71,13 @@ TESTLIST_END ()
 - (int)magic;
 @end
 
-@interface FridaDefaultCalculator : NSObject<FridaCalculator>
+@interface AinakanDefaultCalculator : NSObject<AinakanCalculator>
 {
   NSString * name;
 }
 @end
 
-@implementation FridaDefaultCalculator
+@implementation AinakanDefaultCalculator
 - (id)init {
   self = [super init];
   if (self) {
@@ -148,7 +148,7 @@ TESTCASE (object_enumeration_should_contain_parent_methods)
 
 TESTCASE (object_enumeration_should_contain_protocol_methods)
 {
-  FridaDefaultCalculator * calc = [[[FridaDefaultCalculator alloc] init]
+  AinakanDefaultCalculator * calc = [[[AinakanDefaultCalculator alloc] init]
       autorelease];
 
   COMPILE_AND_LOAD_SCRIPT (
@@ -156,7 +156,7 @@ TESTCASE (object_enumeration_should_contain_protocol_methods)
       "var CalculatorProxy = ObjC.registerProxy({});"
       "var calculatorProxy = new CalculatorProxy(" GUM_PTR_CONST ", {});"
       "var calculator = new ObjC.Object(calculatorProxy, "
-          "ObjC.protocols.FridaCalculator);"
+          "ObjC.protocols.AinakanCalculator);"
       "var keys = Object.keys(calculator);"
       "send(keys.length >= 2);"
       "send(keys.indexOf('add_') !== -1);"
@@ -328,7 +328,7 @@ TESTCASE (own_method_names_can_be_retrieved)
 
 TESTCASE (ivars_can_be_accessed)
 {
-  FridaDefaultCalculator * calc = [[[FridaDefaultCalculator alloc] init]
+  AinakanDefaultCalculator * calc = [[[AinakanDefaultCalculator alloc] init]
       autorelease];
 
   COMPILE_AND_LOAD_SCRIPT (
@@ -384,13 +384,13 @@ TESTCASE (string_can_be_passed_as_argument)
 
 TESTCASE (class_can_be_implemented)
 {
-  const gchar * class_name = "FridaJSCalculator";
+  const gchar * class_name = "AinakanJSCalculator";
 
   COMPILE_AND_LOAD_SCRIPT (
-      "var FridaJSCalculator = ObjC.registerClass({"
+      "var AinakanJSCalculator = ObjC.registerClass({"
           "name: \"%s\","
           "super: ObjC.classes.NSObject,"
-          "protocols: [ObjC.protocols.FridaCalculator],"
+          "protocols: [ObjC.protocols.AinakanCalculator],"
           "methods: {"
               "\"- init\": function () {"
                   "var self = this.super.init();"
@@ -413,7 +413,7 @@ TESTCASE (class_can_be_implemented)
               "}"
            "}"
       "});"
-      "send(FridaJSCalculator.$className === \"%s\");",
+      "send(AinakanJSCalculator.$className === \"%s\");",
       class_name, class_name);
   EXPECT_SEND_MESSAGE_WITH ("true");
 
@@ -431,7 +431,7 @@ TESTCASE (class_can_be_implemented)
 
 TESTCASE (block_can_be_implemented)
 {
-  FridaDefaultCalculator * calc = [[[FridaDefaultCalculator alloc] init]
+  AinakanDefaultCalculator * calc = [[[AinakanDefaultCalculator alloc] init]
       autorelease];
 
   COMPILE_AND_LOAD_SCRIPT (
@@ -519,12 +519,12 @@ TESTCASE (block_can_be_traced_while_invoked)
 
 TESTCASE (block_can_be_migrated_to_the_heap_behind_our_back)
 {
-  FridaDefaultCalculator * calc = [[[FridaDefaultCalculator alloc] init]
+  AinakanDefaultCalculator * calc = [[[AinakanDefaultCalculator alloc] init]
       autorelease];
 
   COMPILE_AND_LOAD_SCRIPT (
-      "var FridaDefaultCalculator = ObjC.classes.FridaDefaultCalculator;"
-      "var m = FridaDefaultCalculator['- add:completion:'].implementation;"
+      "var AinakanDefaultCalculator = ObjC.classes.AinakanDefaultCalculator;"
+      "var m = AinakanDefaultCalculator['- add:completion:'].implementation;"
       "Interceptor.attach(m, {"
           "onEnter: function (args) {"
               "var originalBlockHandle = args[3];"
@@ -668,50 +668,50 @@ TESTCASE (method_replacement_should_stay_alive_independently_of_class_wrapper)
   g_assert_cmpstr (desc.UTF8String, ==, "Snakes");
 }
 
-typedef struct _FridaRect FridaRect;
-typedef struct _FridaPoint FridaPoint;
-typedef struct _FridaSize FridaSize;
-typedef union _FridaUnion FridaUnion;
+typedef struct _AinakanRect AinakanRect;
+typedef struct _AinakanPoint AinakanPoint;
+typedef struct _AinakanSize AinakanSize;
+typedef union _AinakanUnion AinakanUnion;
 
-struct _FridaPoint
+struct _AinakanPoint
 {
   double x;
   double y;
 };
 
-struct _FridaSize
+struct _AinakanSize
 {
   double width;
   double height;
 };
 
-struct _FridaRect
+struct _AinakanRect
 {
-  FridaPoint origin;
-  FridaSize size;
+  AinakanPoint origin;
+  AinakanSize size;
 };
 
-union _FridaUnion
+union _AinakanUnion
 {
   unsigned short s;
   unsigned int i;
   unsigned long long l;
 };
 
-@interface FridaWidget : NSObject
+@interface AinakanWidget : NSObject
 @end
 
-@implementation FridaWidget
+@implementation AinakanWidget
 
-- (FridaPoint)position {
-  FridaPoint p;
+- (AinakanPoint)position {
+  AinakanPoint p;
   p.x = 10.0;
   p.y = 15.0;
   return p;
 }
 
-- (FridaRect)bounds {
-  FridaRect r;
+- (AinakanRect)bounds {
+  AinakanRect r;
   r.origin.x = 10.0;
   r.origin.y = 15.0;
   r.size.width = 30.0;
@@ -727,7 +727,7 @@ union _FridaUnion
   return 35.0f;
 }
 
-- (int)drawRect:(FridaRect)dirtyRect {
+- (int)drawRect:(AinakanRect)dirtyRect {
   return (int) dirtyRect.origin.x + (int) dirtyRect.origin.y +
       (int) dirtyRect.size.width + (int) dirtyRect.size.height;
 }
@@ -736,12 +736,12 @@ union _FridaUnion
 
 TESTCASE (struct_consuming_method_implementation_can_be_overridden)
 {
-  FridaWidget * widget = [[[FridaWidget alloc] init] autorelease];
-  FridaRect r;
+  AinakanWidget * widget = [[[AinakanWidget alloc] init] autorelease];
+  AinakanRect r;
 
   COMPILE_AND_LOAD_SCRIPT (
-      "var FridaWidget = ObjC.classes.FridaWidget;"
-      "var method = FridaWidget[\"- drawRect:\"];"
+      "var AinakanWidget = ObjC.classes.AinakanWidget;"
+      "var method = AinakanWidget[\"- drawRect:\"];"
       "var oldImpl = method.implementation;"
       "method.implementation ="
           "ObjC.implement(method, function (handle, selector, dirtyRect) {"
@@ -763,7 +763,7 @@ TESTCASE (struct_consuming_method_implementation_can_be_overridden)
 
 TESTCASE (struct_returning_method_can_be_called)
 {
-  FridaWidget * widget = [[[FridaWidget alloc] init] autorelease];
+  AinakanWidget * widget = [[[AinakanWidget alloc] init] autorelease];
 
   COMPILE_AND_LOAD_SCRIPT (
       "var widget = new ObjC.Object(" GUM_PTR_CONST ");"
@@ -782,7 +782,7 @@ TESTCASE (struct_returning_method_can_be_called)
 
 TESTCASE (floating_point_returning_method_can_be_called)
 {
-  FridaWidget * widget = [[[FridaWidget alloc] init] autorelease];
+  AinakanWidget * widget = [[[AinakanWidget alloc] init] autorelease];
 
   COMPILE_AND_LOAD_SCRIPT (
       "var widget = new ObjC.Object(" GUM_PTR_CONST ");"
@@ -801,7 +801,7 @@ TESTCASE (attempt_to_read_inexistent_property_should_yield_undefined)
 
 TESTCASE (proxied_method_can_be_invoked)
 {
-  FridaDefaultCalculator * calc = [[[FridaDefaultCalculator alloc] init]
+  AinakanDefaultCalculator * calc = [[[AinakanDefaultCalculator alloc] init]
       autorelease];
 
   COMPILE_AND_LOAD_SCRIPT (
@@ -819,7 +819,7 @@ TESTCASE (proxied_method_can_be_invoked)
 
 TESTCASE (proxied_method_can_be_overridden)
 {
-  FridaDefaultCalculator * calc = [[[FridaDefaultCalculator alloc] init]
+  AinakanDefaultCalculator * calc = [[[AinakanDefaultCalculator alloc] init]
       autorelease];
 
   COMPILE_AND_LOAD_SCRIPT (
@@ -842,13 +842,13 @@ TESTCASE (proxied_method_can_be_overridden)
 
 TESTCASE (proxy_instance_responds_to_selector_for_optional_methods_works)
 {
-  FridaDefaultCalculator * calc = [[[FridaDefaultCalculator alloc] init]
+  AinakanDefaultCalculator * calc = [[[AinakanDefaultCalculator alloc] init]
       autorelease];
 
   COMPILE_AND_LOAD_SCRIPT (
       "var pool = ObjC.classes.NSAutoreleasePool.alloc().init();"
       "var CalculatorProxy = ObjC.registerProxy({"
-        "protocols: [ObjC.protocols.FridaCalculator],"
+        "protocols: [ObjC.protocols.AinakanCalculator],"
         "methods: {"
           "'- magic': function () {"
             "return 0xdeadbeef;"
@@ -864,7 +864,7 @@ TESTCASE (proxy_instance_responds_to_selector_for_optional_methods_works)
   EXPECT_SEND_MESSAGE_WITH ("1");
 }
 
-@interface FridaTest1 : NSObject
+@interface AinakanTest1 : NSObject
 + (int)foo_;
 + (int)fooBar_;
 + (int)fooBar:(int)a;
@@ -872,7 +872,7 @@ TESTCASE (proxy_instance_responds_to_selector_for_optional_methods_works)
 + (int):(int)a :(int)b;
 @end
 
-@implementation FridaTest1
+@implementation AinakanTest1
 + (int)foo_ {
   return 1;
 }
@@ -893,12 +893,12 @@ TESTCASE (proxy_instance_responds_to_selector_for_optional_methods_works)
 TESTCASE (methods_with_weird_names_can_be_invoked)
 {
   COMPILE_AND_LOAD_SCRIPT (
-      "var FridaTest1 = ObjC.classes.FridaTest1;"
+      "var AinakanTest1 = ObjC.classes.AinakanTest1;"
       "var methodNames = ['foo_', 'fooBar_', 'fooBar:', ':', '::'];"
       "var args = [0, 0, 1, 1, 2];"
       "for (var i = 0; i < methodNames.length; i++) {"
-          "var m = FridaTest1['+ ' + methodNames[i]];"
-          "var val = m.apply(FridaTest1, args[i] == 0? []: args[i] == 1? [0]: [0, 0]);"
+          "var m = AinakanTest1['+ ' + methodNames[i]];"
+          "var val = m.apply(AinakanTest1, args[i] == 0? []: args[i] == 1? [0]: [0, 0]);"
           "send(val == i + 1);"
       "}");
 
@@ -908,11 +908,11 @@ TESTCASE (methods_with_weird_names_can_be_invoked)
   }
 }
 
-@interface FridaTest2 : NSObject
+@interface AinakanTest2 : NSObject
 @end
 
 #define METHOD(t, n) + (t)_ ## n:(t)x { return x; }
-@implementation FridaTest2
+@implementation AinakanTest2
 METHOD(char, char)
 METHOD(int, int)
 METHOD(short, short)
@@ -930,19 +930,19 @@ METHOD(char *, char_ptr)
 METHOD(id, id)
 METHOD(Class, Class)
 METHOD(SEL, SEL)
-METHOD(FridaUnion, FridaUnion)
+METHOD(AinakanUnion, AinakanUnion)
 @end
 
 TESTCASE (method_call_preserves_value)
 {
   COMPILE_AND_LOAD_SCRIPT (
-      "var FridaTest2 = ObjC.classes.FridaTest2;"
+      "var AinakanTest2 = ObjC.classes.AinakanTest2;"
       "function test(method, value) {"
           "var arg_value = value;"
           "if (typeof value === 'string') {"
               "arg_value = Memory.allocUtf8String(value);"
           "}"
-          "var result = FridaTest2['+ _' + method + ':'](arg_value);"
+          "var result = AinakanTest2['+ _' + method + ':'](arg_value);"
           "var same = result === value;"
           "if (typeof result === 'number') {"
               "if (isNaN(result)) {"
@@ -994,14 +994,14 @@ TESTCASE (method_call_preserves_value)
       "test('_Bool', false);"
       "test('_Bool', true);"
       "test('char_ptr', 'foobar');"
-      "test('char_ptr', 'frida');"
-      "test('id', FridaTest2);"
+      "test('char_ptr', 'ainakan');"
+      "test('id', AinakanTest2);"
       "test('id', ObjC.classes.NSObject.new());"
-      "test('Class', FridaTest2);"
+      "test('Class', AinakanTest2);"
       "test('Class', ObjC.classes.NSObject);"
       "test('SEL', ObjC.selector('foo'));"
       "test('SEL', ObjC.selector('foo:bar:baz:'));"
-      "test('FridaUnion', 12345);");
+      "test('AinakanUnion', 12345);");
 
   for (gint i = 0; i != 40; i++)
   {
@@ -1012,8 +1012,8 @@ TESTCASE (method_call_preserves_value)
 TESTCASE (method_call_can_be_traced)
 {
   COMPILE_AND_LOAD_SCRIPT (
-      "var FridaTest1 = ObjC.classes.FridaTest1;"
-      "var fooBar = FridaTest1.fooBar_.clone({"
+      "var AinakanTest1 = ObjC.classes.AinakanTest1;"
+      "var fooBar = AinakanTest1.fooBar_.clone({"
           "exceptions: 'propagate',"
           "traps: 'all',"
       "});"
@@ -1030,7 +1030,7 @@ TESTCASE (method_call_can_be_traced)
           "}"
       "});"
 
-      "fooBar.call(FridaTest1, 42);"
+      "fooBar.call(AinakanTest1, 42);"
 
       "Stalker.flush();");
   EXPECT_SEND_MESSAGE_WITH ("\"onCallSummary\"");
@@ -1045,14 +1045,14 @@ TESTCASE (objects_can_be_serialized_to_json)
   EXPECT_NO_MESSAGES ();
 }
 
-@interface FridaTest3 : NSObject
+@interface AinakanTest3 : NSObject
 @end
-@implementation FridaTest3
+@implementation AinakanTest3
 @end
 
-@interface FridaTest4 : FridaTest3
+@interface AinakanTest4 : AinakanTest3
 @end
-@implementation FridaTest4
+@implementation AinakanTest4
 @end
 
 TESTCASE (classes_can_be_enumerated_without_filtering)
@@ -1063,7 +1063,7 @@ TESTCASE (classes_can_be_enumerated_without_filtering)
       "send(owners.length > 1);"
       "var runnerPath = Process.enumerateModulesSync()[0].path;"
       "send(classes[runnerPath] !== undefined);"
-      "send(classes[runnerPath].indexOf('FridaTest3') !== -1)");
+      "send(classes[runnerPath].indexOf('AinakanTest3') !== -1)");
   EXPECT_SEND_MESSAGE_WITH ("true");
   EXPECT_SEND_MESSAGE_WITH ("true");
   EXPECT_SEND_MESSAGE_WITH ("true");
@@ -1094,7 +1094,7 @@ TESTCASE (swift_classes_can_be_enumerated)
   COMPILE_AND_LOAD_SCRIPT (
       "var classes = ObjC.enumerateLoadedClassesSync();"
       "var runnerPath = Process.enumerateModulesSync()[0].path;"
-      "send(classes[runnerPath].indexOf('FridaObjCTests.Taylor') !== -1)");
+      "send(classes[runnerPath].indexOf('AinakanObjCTests.Taylor') !== -1)");
   EXPECT_SEND_MESSAGE_WITH ("true");
   EXPECT_NO_MESSAGES ();
 }
@@ -1111,18 +1111,18 @@ TESTCASE (existing_instances_can_be_discovered)
       "function testChoose(obj, cls, noSubclasses) {"
           "return ObjC.chooseSync({class: cls, subclasses: !noSubclasses}).filter(x => x.handle.equals(obj.handle)).length === 1;"
       "}"
-      "var FridaTest3 = ObjC.classes.FridaTest3;"
-      "var FridaTest4 = ObjC.classes.FridaTest4;"
-      "var obj3 = FridaTest3.new();"
-      "var obj4 = FridaTest4.new();"
-      "send(testChoose(obj3, FridaTest3));"
-      "send(!testChoose(obj3, FridaTest4));"
-      "send(testChoose(obj4, FridaTest3));"
-      "send(testChoose(obj4, FridaTest4));"
-      "send(testChoose(obj3, FridaTest3, true));"
-      "send(!testChoose(obj3, FridaTest4, true));"
-      "send(!testChoose(obj4, FridaTest3, true));"
-      "send(testChoose(obj4, FridaTest4, true));");
+      "var AinakanTest3 = ObjC.classes.AinakanTest3;"
+      "var AinakanTest4 = ObjC.classes.AinakanTest4;"
+      "var obj3 = AinakanTest3.new();"
+      "var obj4 = AinakanTest4.new();"
+      "send(testChoose(obj3, AinakanTest3));"
+      "send(!testChoose(obj3, AinakanTest4));"
+      "send(testChoose(obj4, AinakanTest3));"
+      "send(testChoose(obj4, AinakanTest4));"
+      "send(testChoose(obj3, AinakanTest3, true));"
+      "send(!testChoose(obj3, AinakanTest4, true));"
+      "send(!testChoose(obj4, AinakanTest3, true));"
+      "send(testChoose(obj4, AinakanTest4, true));");
 
   for (gint i = 0; i != 8; i++)
   {
@@ -1133,9 +1133,9 @@ TESTCASE (existing_instances_can_be_discovered)
 TESTCASE (function_can_be_scheduled_on_a_dispatch_queue)
 {
   COMPILE_AND_LOAD_SCRIPT (
-      "var fridaThreadId = Process.getCurrentThreadId();"
+      "var ainakanThreadId = Process.getCurrentThreadId();"
       "ObjC.schedule(" GUM_PTR_CONST ", function () {"
-          "send(Process.getCurrentThreadId() !== fridaThreadId);"
+          "send(Process.getCurrentThreadId() !== ainakanThreadId);"
       "});", dispatch_get_global_queue (DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0));
   UNLOAD_SCRIPT ();
   EXPECT_SEND_MESSAGE_WITH ("true");

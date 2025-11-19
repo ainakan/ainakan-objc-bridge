@@ -1,19 +1,19 @@
 {
-  "name": "frida-objc-bridge-bundle",
+  "name": "ainakan-objc-bridge-bundle",
   "version": "1.0.0",
-  "description": "Bundled up version of frida-objc-bridge for testing",
+  "description": "Bundled up version of ainakan-objc-bridge for testing",
   "private": true,
   "type": "module",
   "main": "bundle.js",
   "scripts": {
     "prepare": "npm run build",
-    "build": "frida-compile bundle -o build/frida-objc-bridge.js",
-    "watch": "frida-compile bundle -o build/frida-objc-bridge.js -w"
+    "build": "ainakan-compile bundle -o build/ainakan-objc-bridge.js",
+    "watch": "ainakan-compile bundle -o build/ainakan-objc-bridge.js -w"
   },
   "license": "LGPL-2.0 WITH WxWindows-exception-3.1",
   "dependencies": {
     "chokidar-cli": "^2.0.0",
-    "frida-compile": "^12.0.0",
-    "frida-objc-bridge": "file:../"
+    "ainakan-compile": "^12.0.0",
+    "ainakan-objc-bridge": "file:../"
   }
 }

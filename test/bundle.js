@@ -1,2 +1,2 @@
-import * as bridge from 'frida-objc-bridge';
+import * as bridge from 'ainakan-objc-bridge';
 global.LocalObjC = bridge;

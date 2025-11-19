@@ -1,4 +1,4 @@
-declare module "frida-objc-bridge" {
+declare module "ainakan-objc-bridge" {
     namespace ObjC {
         /**
          * Whether the current process has an Objective-C runtime loaded. Do not invoke any other ObjC properties or

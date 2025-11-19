@@ -1,6 +1,6 @@
 #include "fixture.h"
 
-#include <frida-gumjs.h>
+#include <ainakan-gumjs.h>
 
 #define RUN_SUITE(name)                                             \
   TEST_RUN_LIST_WITH_DATA (name, gum_script_backend_obtain_qjs ()); \
@@ -13,7 +13,7 @@ static gchar * detect_runner_location (void);
 static gboolean store_path_of_test_runner (const GumModuleDetails * details,
     gpointer user_data);
 
-gchar * frida_objc_bundle = NULL;
+gchar * ainakan_objc_bundle = NULL;
 guint num_tests_run = 0;
 
 int
@@ -45,7 +45,7 @@ main (int argc, char * argv[])
   }
 #endif
 
-  frida_objc_bundle = load_bundle ();
+  ainakan_objc_bundle = load_bundle ();
 
   exceptor = gum_exceptor_obtain ();
 
@@ -90,7 +90,7 @@ load_bundle (void)
 #else
   bundle_dir = g_strdup (runner_dir);
 #endif
-  bundle_location = g_build_filename (bundle_dir, "frida-objc-bridge.js", NULL);
+  bundle_location = g_build_filename (bundle_dir, "ainakan-objc-bridge.js", NULL);
   g_free (bundle_dir);
   g_free (runner_dir);
   g_free (runner_location);

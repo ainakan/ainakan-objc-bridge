@@ -8,7 +8,7 @@
 #ifndef __TEST_FIXTURE_H__
 #define __TEST_FIXTURE_H__
 
-#include <frida-gumjs.h>
+#include <ainakan-gumjs.h>
 
 #define TESTLIST_BEGIN(NAME)                                                \
     void test_ ##NAME## _add_tests (gpointer fixture_data)                  \

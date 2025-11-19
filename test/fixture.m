@@ -108,7 +108,7 @@ static void test_fixture_expect_log_message_with (TestFixture * fixture,
 static void test_fixture_push_timeout (TestFixture * fixture, guint timeout);
 static void test_fixture_pop_timeout (TestFixture * fixture);
 
-extern gchar * frida_objc_bundle;
+extern gchar * ainakan_objc_bundle;
 extern guint num_tests_run;
 
 static void
@@ -282,7 +282,7 @@ test_fixture_compile_and_load_script (TestFixture * fixture,
   va_end (args);
 
   source = g_strconcat (
-      frida_objc_bundle,
+      ainakan_objc_bundle,
       "\n;\n",
       "(function testcase(ObjC) {\n",
       raw_source, "\n",

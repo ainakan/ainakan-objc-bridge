@@ -1992,13 +1992,13 @@ function Runtime() {
         return f.bind(block);
     }
 
-    function rawFridaType(t) {
+    function rawAinakanType(t) {
         return (t === 'object') ? 'pointer' : t;
     }
 
     function makeClassName() {
         for (let i = 1; true; i++) {
-            const name = "FridaAnonymousClass" + i;
+            const name = "AinakanAnonymousClass" + i;
             if (!(name in classRegistry)) {
                 return name;
             }
@@ -2007,7 +2007,7 @@ function Runtime() {
 
     function makeProtocolName() {
         for (let i = 1; true; i++) {
-            const name = "FridaAnonymousProtocol" + i;
+            const name = "AinakanAnonymousProtocol" + i;
             if (!(name in protocolRegistry)) {
                 return name;
             }
